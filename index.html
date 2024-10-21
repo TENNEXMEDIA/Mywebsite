@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Button Hover Example</title>
+    <!-- Link to Bodoni Moda font from Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans+Condensed:300|Bodoni+Moda:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Global Styles */
+        html, body {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+            font-family: 'Bodoni Moda', serif; /* Use Bodoni Moda */
+        }
+
+        body {
+            font-size: 1.3em;
+        }
+
+        /* Parallax Header Section */
+        header {
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            background: url('contact-book-ezgif.com-webp-to-png-converter.png') center no-repeat;
+            background-size: cover;
+        }
+
+        /* Content container with the logo */
+        header .content {
+            position: absolute;
+            top: 50%; /* Vertically center */
+            left: 50%; /* Horizontally center */
+            transform: translate(-50%, -50%); /* Perfect centering */
+            z-index: 1;
+        }
+
+        /* The logo image */
+        header .content img {
+            max-width: 200px; /* Size of the favicon-white.png */
+            height: auto;
+        }
+
+        /* New container for black strip and button */
+        .scrollable-strip {
+            position: relative;
+        }
+
+        /* Black strip that runs the entire height of the page and stays fixed */
+        .black-strip {
+            position: fixed; /* Keep it fixed on the page as you scroll */
+            left: 0;
+            top: 0;
+            width: 48px; /* Narrower width */
+            height: 100vh; /* Full height of the viewport */
+            background-color: black; /* Set back to black */
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-start;
+            z-index: 2000;
+        }
+
+        /* Rotated button with updated position and font size */
+        .rotated-button {
+            position: absolute;
+            left: 0;
+            top: 0%; /* Updated position to top: 0% */
+            width: 68px;
+            line-height: 68px;
+            background-color: transparent; /* Transparent background */
+            color: white;
+            border: none;
+            cursor: pointer;
+            transform: rotate(-90deg);
+            font-size: 20px; /* Updated font size to 20px */
+            font-family: 'Bodoni Moda', serif;
+            white-space: nowrap;
+            text-align: center;
+            z-index: 2001;
+        }
+
+        /* Black background transition */
+        .black-background {
+            position: fixed;
+            top: 0;
+            left: -100%; /* Start off-screen */
+            width: 100%;
+            height: 100vh;
+            background-color: black;
+            transition: left 1s ease-in-out;
+            z-index: 1500;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Image inside black background */
+        .black-background img {
+            opacity: 0; /* Initially hidden */
+            max-width: 240px; /* 20% bigger than favicon's 200px */
+            height: auto;
+            transition: opacity 1s ease-in-out; /* Fade-in effect */
+        }
+
+        /* When activated, slide the black background across the screen */
+        .black-background.active {
+            left: 0;
+        }
+
+        /* When the background is fully open, reveal the image */
+        .black-background.active img {
+            opacity: 1; /* Fade in the image */
+        }
+
+        /* Button One placed at top 50%, left 10% */
+        .btn-one {
+            position: absolute;
+            top: 50%;
+            left: 10%; /* Position it 10% from the left of the screen */
+            transform: translateY(-50%);
+            color: #FFF;
+            transition: all 0.5s;
+            width: 250px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1001; /* Ensure it's on top */
+        }
+
+        /* Button Two placed at top 50%, left 75% */
+        .btn-two {
+            position: absolute;
+            top: 50%;
+            left: 75%; /* Position it 75% from the left of the screen */
+            transform: translateY(-50%);
+            color: #FFF;
+            transition: all 0.5s;
+            width: 250px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1001; /* Ensure it's on top */
+        }
+
+        .btn-one span, .btn-two span {
+            z-index: 2;
+            display: block;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            line-height: 50px;
+        }
+
+        .btn-one::before, .btn-one::after, .btn-two::before, .btn-two::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            transition: all 0.5s;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-one:hover::before, .btn-two:hover::before {
+            transform: rotate(-45deg);
+            background-color: rgba(255, 255, 255, 0);
+        }
+
+        .btn-one:hover::after, .btn-two:hover::after {
+            transform: rotate(45deg);
+            background-color: rgba(255, 255, 255, 0);
+        }
+
+        /* Hide the Innovate, Elevate, Accelerate words initially */
+        .innovate, .elevate, .accelerate {
+            display: none;
+        }
+
+        /* Show them when hovering over Button One */
+        .btn-one:hover ~ .innovate, 
+        .btn-one:hover ~ .elevate, 
+        .btn-one:hover ~ .accelerate {
+            display: block;
+        }
+
+        /* Positioning and styling the word 'Innovate' */
+        .innovate {
+            position: absolute;
+            top: 25%;  /* Move it halfway between current position and top */
+            left: 80px; /* Adjusted position 80px */
+            transform: translateY(-50%);
+            font-size: 72px;  /* Large font size */
+            color: white;     /* White color */
+            z-index: 1000;    /* Make sure it’s on top of other elements */
+        }
+
+        /* Positioning and styling the word 'Elevate' */
+        .elevate {
+            position: absolute;
+            top: 50%;  /* Centered between Innovate and Accelerate */
+            left: 80px; /* Adjusted position 80px */
+            transform: translateY(-50%); /* Align it properly */
+            font-size: 72px;  /* Large font size */
+            color: white;     /* White color */
+            z-index: 1000;    /* Make sure it’s on top of other elements */
+        }
+
+        /* Positioning and styling the word 'Accelerate' */
+        .accelerate {
+            position: absolute;
+            bottom: 25%;  /* Same distance from the bottom as Innovate is from the top */
+            left: 80px; /* Adjusted position 80px */
+            transform: translateY(50%); /* Align it properly */
+            font-size: 72px;  /* Large font size */
+            color: white;     /* White color */
+            z-index: 1000;    /* Make sure it’s on top of other elements */
+        }
+
+        /* Parallax background effect */
+        header .overlay {
+            position: absolute;
+            top: 0;
+            right: 0;
+            left: 0;
+            bottom: 0;
+            background: #333 center no-repeat;
+            background-size: cover;
+            z-index: 0;
+            opacity: 0;
+            filter: blur(4px);
+        }
+
+        /* Site Section - scrollable content below the header */
+        .site {
+            padding: 10em 0;
+            text-align: center;
+            background-color: #efefef;
+            font-size: .8em;
+            color: #444;
+            position: relative;
+        }
+
+        .site nav {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: #222; /* Navigation bar color remains #222 */
+            width: 100%;
+        }
+
+        .site nav a {
+            padding: 10px 30px;
+            font-size: 1.3em;
+            display: inline-block;
+            color: #666;
+            text-decoration: none;
+        }
+
+        .site nav a:hover {
+            background: #333;
+            color: #fff;
+        }
+
+        /* Hover One button styles (Hover #1) */
+        .btn-hover-one {
+            position: absolute;
+            top: 75%; /* Just below center */
+            left: 50%; /* Horizontally center */
+            transform: translate(-50%, -50%);
+            color: #FFF;
+            transition: all 0.3s;
+            width: 250px;
+            height: 50px;
+            text-align: center;
+            cursor: pointer;
+            line-height: 50px;
+            z-index: 1001;
+        }
+
+        .btn-hover-one::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0;
+            transition: all 0.3s;
+            border-top-width: 1px;
+            border-bottom-width: 1px;
+            border-top-style: solid;
+            border-bottom-style: solid;
+            border-top-color: rgba(255, 255, 255, 0.5);
+            border-bottom-color: rgba(255, 255, 255, 0.5);
+            transform: scale(0.1, 1);
+        }
+
+        .btn-hover-one:hover span {
+            letter-spacing: 2px;
+        }
+
+        .btn-hover-one:hover::before {
+            opacity: 1;	
+            transform: scale(1, 1);	
+        }
+
+        .btn-hover-one::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            transition: all 0.3s;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-hover-one:hover::after {
+            opacity: 0;	
+            transform: scale(0.1, 1);
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- New container for black strip and button -->
+    <div class="scrollable-strip">
+        <!-- Black strip running down the page with button -->
+        <div class="black-strip">
+            <button class="rotated-button" id="trigger">Index</button>
+        </div>
+    </div>
+
+    <!-- Black background transition -->
+    <div class="black-background" id="black-background">
+        <!-- Image updated to tennex-media-white-300x.png -->
+        <img src="tennex-media-white-300x.png" alt="Revealed Image">
+    </div>
+
+    <!-- Button One placed at top 50%, left 10% -->
+    <div class="btn-one">
+        <span>More</span>
+    </div>
+
+    <!-- Button Two placed at top 50%, left 75% -->
+    <div class="btn-two">
+        <span>More</span>
+    </div>
+
+    <!-- Hover One button placed just below the center (60%) -->
+    <div class="btn-hover-one">
+        <span>Book an Appointment</span>
+    </div>
+
+    <!-- Large 'Innovate' text, initially hidden -->
+    <div class="innovate">Innovate</div>
+
+    <!-- Large 'Elevate' text, initially hidden -->
+    <div class="elevate">Elevate</div>
+
+    <!-- Large 'Accelerate' text, initially hidden -->
+    <div class="accelerate">Accelerate</div>
+
+    <!-- Parallax Header Section -->
+    <header>
+        <div class="content">
+            <!-- Display the favicon-white.png image centered -->
+            <img src="favicon-white.png" alt="Logo">
+        </div>
+        <div class="overlay"></div>
+    </header>
+
+    <!-- Scrollable Site Section with Navigation -->
+    <section class="site">
+        <nav>
+            <a href="#">Page 1</a>
+            <a href="#">Page 2</a>
+            <a href="#">Page 3</a>
+            <a href="#">Page 4</a>
+        </nav>
+        <blockquote>
+            <p>“Success is not final, failure is not fatal: It is the courage to continue that counts.” — Winston Churchill</p>
+        </blockquote>
+    </section>
+
+    <!-- Script to trigger the black background transition -->
+    <script>
+        const triggerButton = document.getElementById('trigger');
+        const blackBackground = document.getElementById('black-background');
+
+        triggerButton.addEventListener('click', function() {
+            blackBackground.classList.toggle('active');
+        });
+
+        // JavaScript to change button text on hover
+        const btnOne = document.querySelector('.btn-one span');
+        const btnTwo = document.querySelector('.btn-two span');
+        const btnHoverOne = document.querySelector('.btn-hover-one span');
+
+        document.querySelector('.btn-one').addEventListener('mouseenter', function() {
+            btnOne.textContent = 'Less';
+        });
+
+        document.querySelector('.btn-one').addEventListener('mouseleave', function() {
+            btnOne.textContent = 'More';
+        });
+
+        document.querySelector('.btn-two').addEventListener('mouseenter', function() {
+            btnTwo.textContent = 'Less';
+        });
+
+        document.querySelector('.btn-two').addEventListener('mouseleave', function() {
+            btnTwo.textContent = 'More';
+        });
+
+        // Hover One behavior
+        document.querySelector('.btn-hover-one').addEventListener('mouseenter', function() {
+            btnHoverOne.textContent = 'Today';
+        });
+
+        document.querySelector('.btn-hover-one').addEventListener('mouseleave', function() {
+            btnHoverOne.textContent = 'Book an Appointment';
+        });
+    </script>
+
+</body>
+</html>
